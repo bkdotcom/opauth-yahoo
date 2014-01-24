@@ -110,7 +110,17 @@ class YahooStrategy extends OpauthStrategy {
 					'raw' => $profile['profile']
 				);
 
-				if (!empty($profile['profile']['emails'][0]['handle'])) $this->auth['info']['email'] = $profile['profile']['emails'][0]['handle'];
+				//if (!empty($profile['profile']['emails'][0]['handle'])) $this->auth['info']['email'] = $profile['profile']['emails'][0]['handle'];
+				/**
+		 		 * loop through emails... set email to primary
+		 		 * if primary not defined, use last email
+		 		 */
+				foreach ( $profile['profile']['emails'] as $a ) {
+					if ( !empty($a['handle']) )
+						$this->auth['info']['email'] = $a['handle'];
+					if ( !empty($a['primary']) )
+						break;
+				}
 				if (!empty($profile['profile']['nickname'])) $this->auth['info']['nickname'] = $profile['profile']['nickname'];
 				if (!empty($profile['profile']['givenName'])) $this->auth['info']['first_name'] = $profile['profile']['givenName'];
 				if (!empty($profile['profile']['familyName'])) $this->auth['info']['last_name'] = $profile['profile']['familyName'];
